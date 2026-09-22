@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Tickets & Developer Workstation | WorkPulse Cognizant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --snow-dark: #f0f4f8;
+      --snow-header: #ffffff;
+      --snow-card: #ffffff;
+      --snow-border: #dbe2ea;
+      --brand-navy: #000055;
+      --brand-blue: #0033a0;
+      --brand-accent: #00a3e0;
+      --jira-blue: #0052cc;
+      --slack-purple: #4a154b;
+      --teams-purple: #5b5fc7;
+      --email-red: #ea4335;
+      --p1-red: #dc2626;
+      --p2-orange: #ea580c;
+      --p3-yellow: #d97706;
+      --state-green: #10b981;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+    body {
+      background: var(--snow-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* Top Brand Bar */
+    .snow-topbar {
+      background: var(--brand-navy);
+      padding: 8px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid var(--brand-accent);
+      font-size: 12px;
+    }
+
+    .snow-topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .snow-portal-title {
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.3px;
+    }
+
+    .snow-portal-sub {
+      color: var(--brand-accent);
+      font-weight: 500;
+      background: rgba(0, 163, 224, 0.15);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* ServiceNow Navigation Bar */
+    .snow-navbar {
+      background: var(--snow-header);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--snow-border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-tab-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--snow-border);
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .nav-tab-btn.active {
+      background: var(--brand-blue);
+      color: #ffffff;
+      border-color: var(--brand-blue);
+      box-shadow: 0 2px 8px rgba(0, 51, 160, 0.25);
+    }
+
+    .dev-switcher-select {
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid var(--brand-accent);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .jira-oauth-header-btn {
+      background: linear-gradient(135deg, var(--jira-blue), #0747a6);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 10px rgba(0, 82, 204, 0.2);
+      transition: transform 0.1s;
+    }
+
+    .jira-oauth-header-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Main Layout */
+    .container {
+      max-width: 1400px;
+      margin: 20px auto;
+      padding: 0 24px;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .kpi-card {
+      background: var(--snow-card);
+      border: 1px solid var(--snow-border);
+      border-radius: 10px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 4px;
+    }
+
+    .kpi-card.p1::before { background: var(--p1-red); }
+    .kpi-card.p2::before { background: var(--p2-orange); }
+    .kpi-card.p3::before { background: var(--p3-yellow); }
+    .kpi-card.sla::before { background: var(--state-green); }
+    .kpi-card.left::before { background: var(--brand-accent); }
+
+    .kpi-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+    .kpi-value { font-size: 26px; font-weight: 800; margin: 6px 0 2px 0; color: var(--text-main); }
+    .kpi-sub { font-size: 11px; color: var(--text-muted); }
+
+    /* Workload Progress Bar */
+    .progress-bar {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand-blue), var(--brand-accent));
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    /* Main Grid Layout */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+    }
+
+    /* Panels */
+    .snow-panel {
+      background: var(--snow-card);
+      border: 1px solid var(--snow-border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Search & Filter Controls */
+    .search-filter-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 10px 14px;
+      background: #ffffff;
+      border: 1px solid var(--snow-border);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus { border-color: var(--brand-accent); }
+
+    .btn-export {
+      background: rgba(0, 163, 224, 0.1);
+      border: 1px solid var(--brand-accent);
+      color: var(--brand-blue);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-export:hover { background: var(--brand-blue); color: #fff; }
+
+    /* Channel Pill Filter Bar */
+    .channel-filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .channel-filter-btn {
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--snow-border);
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .channel-filter-btn.active {
+      background: var(--brand-blue);
+      color: #ffffff;
+      border-color: var(--brand-blue);
+    }
+
+    /* Developer Task Cards Grid */
+    .dev-task-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 16px;
+    }
+
+    .dev-task-card {
+      background: #ffffff;
+      border: 1px solid var(--snow-border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-left: 4px solid var(--brand-accent);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .dev-task-card.source-jira { border-left-color: var(--jira-blue); }
+    .dev-task-card.source-slack { border-left-color: var(--slack-purple); }
+    .dev-task-card.source-teams { border-left-color: var(--teams-purple); }
+    .dev-task-card.source-email { border-left-color: var(--email-red); }
+
+    .task-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .source-tag {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    .source-tag.jira { background: var(--jira-blue); color: #fff; }
+    .source-tag.slack { background: var(--slack-purple); color: #fff; }
+    .source-tag.teams { background: var(--teams-purple); color: #fff; }
+    .source-tag.email { background: var(--email-red); color: #fff; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-p1 { background: rgba(220, 38, 38, 0.12); color: var(--p1-red); border: 1px solid var(--p1-red); }
+    .badge-p2 { background: rgba(234, 88, 12, 0.12); color: var(--p2-orange); border: 1px solid var(--p2-orange); }
+    .badge-p3 { background: rgba(217, 119, 6, 0.12); color: var(--p3-yellow); border: 1px solid var(--p3-yellow); }
+
+    .task-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .task-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .task-footer {
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--snow-border);
+      padding-top: 8px;
+    }
+
+    /* ServiceNow Table */
+    .snow-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .snow-table th {
+      background: #f8fafc;
+      color: var(--text-muted);
+      text-align: left;
+      padding: 12px 14px;
+      font-size: 11px;
+      text-transform: uppercase;
+      border-bottom: 2px solid var(--snow-border);
+      font-weight: 700;
+    }
+
+    .snow-table td {
+      padding: 14px;
+      border-bottom: 1px solid var(--snow-border);
+      vertical-align: middle;
+    }
+
+    /* Sidebar Action Widget */
+    .sidebar-widget {
+      background: var(--snow-card);
+      border: 1px solid var(--snow-border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .btn-scan {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--brand-blue), var(--brand-accent));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 51, 160, 0.25);
+      margin-bottom: 16px;
+    }
+
+    .output-box {
+      background: #f8fafc;
+      border: 1px solid var(--snow-border);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 12px;
+      max-height: 440px;
+      overflow-y: auto;
+      line-height: 1.6;
+      color: var(--text-main);
+    }
+
+    /* Modal for Jira OAuth */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 55, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .jira-modal {
+      background: #ffffff;
+      border: 2px solid #0052cc;
+      border-radius: 16px;
+      width: 480px;
+      padding: 24px;
+      box-shadow: 0 10px 40px rgba(0, 82, 204, 0.3);
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ServiceNow Top Brand Bar -->
+  <div class="snow-topbar">
+    <div class="snow-topbar-brand">
+      <svg viewBox="0 0 180 32" height="20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 10 4 A 12 12 0 1 0 22 16 L 16 16 A 6 6 0 1 1 10 10 Z" fill="#00A3E0"/>
+        <circle cx="16" cy="10" r="2.8" fill="#00FFCC"/>
+        <text x="28" y="21" font-family="'Inter', sans-serif" font-weight="700" font-size="16" fill="#FFFFFF">cognizant</text>
+      </svg>
+      <span class="snow-portal-title">WorkPulse Developer Workstation</span>
+      <span class="snow-portal-sub">Multi-Channel Action Radar</span>
+    </div>
+    <div style="display: flex; gap: 16px; align-items: center; color: rgba(255,255,255,0.8);">
+      <span>Developer Persona:</span>
+      <select class="dev-switcher-select" id="devSelect" onchange="changeDeveloperPersona(this.value)">
+        <option value="alex">👨‍💻 Alex Rivera (Senior Gateway Eng)</option>
+        <option value="elena">👩‍💻 Elena Rostova (Lead Security Eng)</option>
+        <option value="chris">👨‍💻 Chris Vance (Frontend Lead)</option>
+        <option value="samir">👨‍💻 Samir Patel (DevOps Architect)</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- ServiceNow Navigation Header -->
+  <div class="snow-navbar">
+    <div class="nav-tabs">
+      <a href="/" class="nav-tab-btn" style="text-decoration: none; background: #ffffff; color: var(--brand-blue);">
+        💬 Back to WorkPulse Chat
+      </a>
+      <button class="nav-tab-btn active" id="btnUserTab" onclick="switchMainTab('user')">
+        👨‍💻 My Workstation & Channels
+      </button>
+      <button class="nav-tab-btn" id="btnAdminTab" onclick="switchMainTab('admin')">
+        🏢 All Tickets & Admin Oversight
+      </button>
+    </div>
+    <div>
+      <button class="jira-oauth-header-btn" onclick="openJiraModal()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.53 2c0 2.4 1.97 4.35 4.35 4.35h1.78v1.7c0 2.4 1.94 4.34 4.34 4.35V2.01L11.53 2zM6.77 6.8c0 2.4 1.96 4.34 4.35 4.34h1.78v1.72c.01 2.39 1.95 4.34 4.34 4.34V6.8H6.77zM2 11.6c0 2.4 1.95 4.34 4.35 4.34h1.78v1.72c.01 2.39 1.95 4.34 4.35 4.34V11.6H2z"/>
+        </svg>
+        Sign in to Jira via OAuth
+      </button>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- KPI Metrics Row for Selected Developer -->
+    <div class="kpi-grid">
+      <div class="kpi-card p1">
+        <div class="kpi-title">My P1 Critical Tasks</div>
+        <div class="kpi-value" id="kpiP1" style="color: var(--p1-red);">1</div>
+        <div class="kpi-sub" id="kpiP1Sub">SLA Breach Risk (PROJ-102)</div>
+      </div>
+
+      <div class="kpi-card p2">
+        <div class="kpi-title">My P2 Major Tasks</div>
+        <div class="kpi-value" id="kpiP2" style="color: var(--p2-orange);">1</div>
+        <div class="kpi-sub" id="kpiP2Sub">Slack PR Review</div>
+      </div>
+
+      <div class="kpi-card p3">
+        <div class="kpi-title">My Teams & Email Action Items</div>
+        <div class="kpi-value" id="kpiOther" style="color: var(--p3-yellow);">2</div>
+        <div class="kpi-sub">Unread Action Items</div>
+      </div>
+
+      <div class="kpi-card sla">
+        <div class="kpi-title">OAuth Channel Status</div>
+        <div class="kpi-value" style="color: var(--state-green);">4 / 4</div>
+        <div class="kpi-sub">Jira, Slack, Teams, Email Active</div>
+      </div>
+
+      <div class="kpi-card left">
+        <div class="kpi-title">My Workload % Left</div>
+        <div class="kpi-value" id="kpiPctLeft" style="color: var(--brand-accent);">25% Left</div>
+        <div class="kpi-sub" id="kpiTasksLeft">3 Pending Action Items</div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 25%;"></div></div>
+      </div>
+    </div>
+
+    <!-- Live Search & CSV Export Bar -->
+    <div class="search-filter-row">
+      <input type="text" class="search-input" id="searchBar" placeholder="🔍 Search tickets by key, title, priority, channel, or assigned engineer..." onkeyup="filterLiveSearch(this.value)">
+      <button class="btn-export" onclick="exportSLAReportCSV()">📥 Export SLA CSV</button>
+    </div>
+
+    <!-- Main Grid Layout -->
+    <div class="main-layout">
+      
+      <div>
+        
+        <!-- DEVELOPER USER WORKSTATION VIEW -->
+        <div id="userWorkstationView">
+          <div class="snow-panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title" id="devWorkstationTitle">
+                  👨‍💻 Alex Rivera's Workstation — What's Left for Me
+                </div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">
+                  Filtered action items synced across your Slack mentions, Jira sprint tickets, Email inbox, and Teams groups
+                </p>
+              </div>
+              <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">OAuth Active</span>
+            </div>
+
+            <!-- Channel Filter Pills -->
+            <div class="channel-filter-bar">
+              <button class="channel-filter-btn active" onclick="filterChannel('all', this)">All My Channels (4)</button>
+              <button class="channel-filter-btn" onclick="filterChannel('jira', this)">📌 Jira Sprint</button>
+              <button class="channel-filter-btn" onclick="filterChannel('slack', this)">💬 Slack Mentions</button>
+              <button class="channel-filter-btn" onclick="filterChannel('teams', this)">👥 Teams Groups</button>
+              <button class="channel-filter-btn" onclick="filterChannel('email', this)">📧 Email Action Items</button>
+            </div>
+
+            <!-- Developer Task Grid -->
+            <div class="dev-task-grid" id="devTasksContainer">
+              <!-- Dynamically Populated by JS based on Selected Developer -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ADMIN COMMAND CENTER OVERVIEW -->
+        <div id="adminTeamView" style="display: none;">
+          <div class="snow-panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                🏢 All Tickets & Admin Team Incident Oversight
+              </div>
+              <span style="font-size: 12px; color: var(--text-muted);">Cross-Developer Workload Distribution</span>
+            </div>
+
+            <table class="snow-table" id="allTicketsTable">
+              <thead>
+                <tr>
+                  <th>Incident Key</th>
+                  <th>Short Description</th>
+                  <th>Priority</th>
+                  <th>Assigned Developer</th>
+                  <th>State</th>
+                  <th>SLA Countdown</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="ticket-row">
+                  <td><span class="source-tag jira">Jira</span> <strong>PROJ-102</strong></td>
+                  <td>Fix auth timeout bug in API gateway microservice</td>
+                  <td><span class="badge badge-p1">P1 Critical</span></td>
+                  <td><strong>Alex Rivera</strong> (Senior Gateway Eng)</td>
+                  <td><span style="color: #ea580c;">Pending Fix</span></td>
+                  <td><strong style="color: var(--p1-red);">3h 42m remaining</strong></td>
+                </tr>
+                <tr class="ticket-row">
+                  <td><span class="source-tag slack">Slack</span> <strong>PR-42</strong></td>
+                  <td>Review deployment pull request for payments v2</td>
+                  <td><span class="badge badge-p2">P2 Major</span></td>
+                  <td><strong>Chris Vance</strong> (Frontend Lead)</td>
+                  <td><span style="color: var(--brand-accent);">In Review</span></td>
+                  <td><span style="color: var(--p2-orange);">18h remaining</span></td>
+                </tr>
+                <tr class="ticket-row">
+                  <td><span class="source-tag teams">Teams</span> <strong>COMP-99</strong></td>
+                  <td>Submit Q3 security compliance certification signoff</td>
+                  <td><span class="badge badge-p1">P1 Critical</span></td>
+                  <td><strong>Elena Rostova</strong> (Lead Security Eng)</td>
+                  <td><span style="color: #ea580c;">Awaiting Signoff</span></td>
+                  <td><strong style="color: var(--p1-red);">1h 15m remaining</strong></td>
+                </tr>
+                <tr class="ticket-row">
+                  <td><span class="source-tag email">Email</span> <strong>EXP-77</strong></td>
+                  <td>Approve annual travel expense report & receipts</td>
+                  <td><span class="badge badge-p3">P3 Moderate</span></td>
+                  <td><strong>Elena Rostova</strong> (Lead Security Eng)</td>
+                  <td><span>Pending Audit</span></td>
+                  <td><span>2 Days remaining</span></td>
+                </tr>
+                <tr class="ticket-row">
+                  <td><span class="source-tag jira">Jira</span> <strong>INFRA-501</strong></td>
+                  <td>Provision GKE cluster autoscaling policy for prod</td>
+                  <td><span class="badge badge-p2">P2 Major</span></td>
+                  <td><strong>Samir Patel</strong> (DevOps Architect)</td>
+                  <td><span style="color: var(--state-green);">Resolved / Closed</span></td>
+                  <td><span style="color: var(--state-green);">SLA Met</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Action Sidebar -->
+      <div class="sidebar-widget">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 6px;" id="sidebarTitle">Automated Action Radar</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;" id="sidebarSub">Query what is left for your persona across Slack, Jira, Teams & Email</p>
+        <button class="btn-scan" onclick="runPersonalPrompt()">⚡ Identify what are left for me</button>
+        <div class="output-box" id="radarOutput">
+          <p style="color: var(--text-muted);">Click <strong>"Identify what are left for me"</strong> to run a live AI scan tailored specifically to your developer channels.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Jira OAuth Modal -->
+  <div class="modal-overlay" id="jiraModal">
+    <div class="jira-modal">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="color: var(--text-main); font-weight: 700; font-size: 18px;">Atlassian Jira OAuth 2.0 Access</h3>
+        <button style="background:none; border:none; color:var(--text-muted); font-size:22px; cursor:pointer;" onclick="closeJiraModal()">&times;</button>
+      </div>
+      <p style="font-size: 13px; color: var(--text-muted);">WorkPulse requests OAuth 2.0 authorization to extract pending tasks and sync sprint progress.</p>
+      
+      <div style="background: #f8fafc; border: 1px solid var(--snow-border); border-radius: 8px; padding: 12px; margin: 16px 0; font-size: 12px;">
+        <strong>Requested OAuth Scopes:</strong>
+        <ul style="margin-left: 18px; margin-top: 6px; color: var(--text-muted);">
+          <li>read:jira-work (Read issues, projects & sprints)</li>
+          <li>write:jira-work (Update ticket progress & comments)</li>
+          <li>offline_access (Secure token refresh via GCP Secret Manager)</li>
+        </ul>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button style="background: #f1f5f9; color: var(--text-main); border: 1px solid var(--snow-border); padding: 10px 16px; border-radius: 6px; font-weight: 600; cursor: pointer;" onclick="closeJiraModal()">Cancel</button>
+        <button style="background: #0052cc; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 700; cursor: pointer;" onclick="completeJiraOAuth()">Grant OAuth Access</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const developerData = {
+      alex: {
+        name: "Alex Rivera",
+        role: "Senior Gateway Engineer",
+        p1: "1", p2: "1", other: "2",
+        pctLeft: "25% Left", progressPct: "25%",
+        tasksLeft: "3 Action Items Left",
+        tasks: [
+          { id: "PROJ-102", source: "jira", sourceLabel: "Jira Sprint", priority: "badge-p1", priorityLabel: "P1 Critical", title: "Fix auth timeout bug in API gateway microservice", desc: "Gateway connection drops under 500 req/s load spikes. Needs memory pool tuning & timeout bump.", footerLeft: "Assigned: Alex Rivera", footerRight: "SLA: 3h 42m remaining" },
+          { id: "PR-114", source: "slack", sourceLabel: "Slack #dev-gateway", priority: "badge-p2", priorityLabel: "P2 Major", title: "Review JWT Token refresh middleware PR", desc: "Mentioned by @chris: Please review token invalidation logic before deployment.", footerLeft: "Channel: #dev-gateway", footerRight: "Pending Review" },
+          { id: "API-SPEC", source: "email", sourceLabel: "Gmail Action Item", priority: "badge-p3", priorityLabel: "P3 Moderate", title: "Update API Gateway OpenAPI 3.0 specs", desc: "Email from Lead Architect: Finalize swagger schemas for payments v2 endpoint.", footerLeft: "From: Lead Arch", footerRight: "Due Today" },
+          { id: "PERF-88", source: "teams", sourceLabel: "Teams #arch-guild", priority: "badge-p3", priorityLabel: "P3 Moderate", title: "Gateway throughput latency benchmark report", desc: "Post performance metrics to #arch-guild channel after stress testing.", footerLeft: "Group: Arch Guild", footerRight: "In Progress" }
+        ]
+      },
+      elena: {
+        name: "Elena Rostova",
+        role: "Lead Security Eng",
+        p1: "2", p2: "1", other: "1",
+        pctLeft: "66% Left", progressPct: "66%",
+        tasksLeft: "4 Action Items Left",
+        tasks: [
+          { id: "COMP-99", source: "teams", sourceLabel: "Teams #security-ops", priority: "badge-p1", priorityLabel: "P1 Critical", title: "Submit Q3 security compliance certification signoff", desc: "Audit blocker: Need digital signature for SOC2 compliance checklist.", footerLeft: "Assigned: Elena Rostova", footerRight: "SLA: 1h 15m remaining" },
+          { id: "EXP-77", source: "email", sourceLabel: "Gmail Action Item", priority: "badge-p3", priorityLabel: "P3 Moderate", title: "Approve annual travel expense report for Chris Vance", desc: "Pending manager audit check for hotel & flight receipts.", footerLeft: "From: Expense Bot", footerRight: "Pending Audit" },
+          { id: "SEC-804", source: "jira", sourceLabel: "Jira Sprint", priority: "badge-p1", priorityLabel: "P1 Critical", title: "Patch CVE-2026-9812 vulnerability in gateway image", desc: "Upgrade base container image to patch OpenSSL CVE.", footerLeft: "Sprint: Security Q3", footerRight: "Pending Deploy" },
+          { id: "CORS-9", source: "slack", sourceLabel: "Slack #sec-alerts", priority: "badge-p2", priorityLabel: "P2 Major", title: "Verify CORS headers on production auth endpoints", desc: "Audit wildcard origin headers in API gateway configuration.", footerLeft: "Channel: #sec-alerts", footerRight: "Action Item" }
+        ]
+      },
+      chris: {
+        name: "Chris Vance",
+        role: "Frontend Lead",
+        p1: "0", p2: "2", other: "1",
+        pctLeft: "33% Left", progressPct: "33%",
+        tasksLeft: "2 Action Items Left",
+        tasks: [
+          { id: "PR-42", source: "slack", sourceLabel: "Slack #frontend-pr", priority: "badge-p2", priorityLabel: "P2 Major", title: "Review deployment pull request for payments v2", desc: "Stripe webhook retry UI component review & dark mode compliance.", footerLeft: "Assigned: Chris Vance", footerRight: "Pending Review" },
+          { id: "UI-301", source: "jira", sourceLabel: "Jira Sprint", priority: "badge-p2", priorityLabel: "P2 Major", title: "Implement dark mode accessibility contrast fixes", desc: "Ensure WCAG AAA contrast ratio compliance across dashboard tables.", footerLeft: "Sprint: Sprint 44", footerRight: "In Progress" }
+        ]
+      },
+      samir: {
+        name: "Samir Patel",
+        role: "DevOps Architect",
+        p1: "0", p2: "0", other: "0",
+        pctLeft: "0% Left (Done!)", progressPct: "0%",
+        tasksLeft: "0 Action Items (All Done)",
+        tasks: [
+          { id: "INFRA-501", source: "jira", sourceLabel: "Jira Sprint", priority: "badge-p2", priorityLabel: "P2 Major", title: "Provision GKE cluster autoscaling policy for prod", desc: "HPA autoscaling metrics configured for 80% CPU target.", footerLeft: "Assigned: Samir Patel", footerRight: "Resolved / Closed" }
+        ]
+      }
+    };
+
+    let currentDev = 'alex';
+    let currentFilter = 'all';
+
+    function renderDevTasks() {
+      const dev = developerData[currentDev];
+      document.getElementById('devWorkstationTitle').textContent = `👨‍💻 ${dev.name}'s Workstation — What's Left for Me`;
+      document.getElementById('kpiP1').textContent = dev.p1;
+      document.getElementById('kpiP2').textContent = dev.p2;
+      document.getElementById('kpiOther').textContent = dev.other;
+      document.getElementById('kpiPctLeft').textContent = dev.pctLeft;
+      document.getElementById('kpiTasksLeft').textContent = dev.tasksLeft;
+      document.getElementById('progressFill').style.width = dev.progressPct;
+
+      const container = document.getElementById('devTasksContainer');
+      container.innerHTML = '';
+
+      const filteredTasks = dev.tasks.filter(t => currentFilter === 'all' || t.source === currentFilter);
+
+      if (filteredTasks.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1/-1; padding: 30px; text-align: center; color: var(--text-muted);">🎉 All caught up! No pending items for this channel.</div>';
+        return;
+      }
+
+      filteredTasks.forEach(task => {
+        const card = document.createElement('div');
+        card.className = `dev-task-card source-${task.source}`;
+        card.innerHTML = `
+          <div>
+            <div class="task-card-header">
+              <span class="source-tag ${task.source}">${task.sourceLabel}</span>
+              <span class="badge ${task.priority}">${task.priorityLabel}</span>
+            </div>
+            <div class="task-title">${task.id}: ${task.title}</div>
+            <div class="task-desc">${task.desc}</div>
+          </div>
+          <div class="task-footer">
+            <span>${task.footerLeft}</span>
+            <strong style="color: var(--brand-accent);">${task.footerRight}</strong>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function changeDeveloperPersona(devKey) {
+      currentDev = devKey;
+      renderDevTasks();
+    }
+
+    function filterChannel(channel, btn) {
+      currentFilter = channel;
+      document.querySelectorAll('.channel-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderDevTasks();
+    }
+
+    function switchMainTab(tab) {
+      const userBtn = document.getElementById('btnUserTab');
+      const adminBtn = document.getElementById('btnAdminTab');
+      const userView = document.getElementById('userWorkstationView');
+      const adminView = document.getElementById('adminTeamView');
+
+      if (tab === 'admin') {
+        userBtn.classList.remove('active');
+        adminBtn.classList.add('active');
+        userView.style.display = 'none';
+        adminView.style.display = 'block';
+      } else {
+        adminBtn.classList.remove('active');
+        userBtn.classList.add('active');
+        adminView.style.display = 'none';
+        userView.style.display = 'block';
+      }
+    }
+
+    function filterLiveSearch(query) {
+      const q = query.toLowerCase();
+      
+      const rows = document.querySelectorAll('.ticket-row');
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        r.style.display = text.includes(q) ? '' : 'none';
+      });
+
+      const cards = document.querySelectorAll('.dev-task-card');
+      cards.forEach(c => {
+        const text = c.innerText.toLowerCase();
+        c.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+
+    function exportSLAReportCSV() {
+      let csv = "Incident Key,Channel,Description,Priority,Assigned Developer,State,SLA Countdown\n";
+      csv += "PROJ-102,Jira,Fix auth timeout bug in gateway microservice,P1 Critical,Alex Rivera,Pending Fix,3h 42m remaining\n";
+      csv += "PR-42,Slack,Review deployment pull request for payments v2,P2 Major,Chris Vance,In Review,18h remaining\n";
+      csv += "COMP-99,Teams,Submit Q3 security compliance certification signoff,P1 Critical,Elena Rostova,Awaiting Signoff,1h 15m remaining\n";
+      csv += "EXP-77,Email,Approve annual travel expense report & receipts,P3 Moderate,Elena Rostova,Pending Audit,2 Days remaining\n";
+      csv += "INFRA-501,Jira,Provision GKE cluster autoscaling policy,P2 Major,Samir Patel,Resolved / Closed,SLA Met\n";
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.setAttribute('href', url);
+      a.setAttribute('download', 'WorkPulse_SLA_Report.csv');
+      a.click();
+    }
+
+    function openJiraModal() { document.getElementById('jiraModal').classList.add('show'); }
+    function closeJiraModal() { document.getElementById('jiraModal').classList.remove('show'); }
+    function completeJiraOAuth() { alert("✔ Jira OAuth 2.0 Authorization Granted!\nToken synchronized with GCP Secret Manager."); closeJiraModal(); }
+
+    async function runPersonalPrompt() {
+      const dev = developerData[currentDev];
+      const out = document.getElementById('radarOutput');
+      out.innerHTML = `<p style="color: var(--brand-accent);">Scanning ${dev.name}'s Slack, Jira, Teams, and Email channels...</p>`;
+
+      try {
+        const response = await fetch('/a2a/app/run_sse', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: `Identify what are left for ${dev.name} across Slack, Jira, Teams, and Email`, session_id: `session-${currentDev}` })
+        });
+
+        if (!response.ok) { fetchFallbackPrompt(dev); return; }
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let text = '';
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          text += decoder.decode(value);
+        }
+        out.innerHTML = '<div style="white-space: pre-wrap;">' + text + '</div>';
+      } catch (err) {
+        fetchFallbackPrompt(dev);
+      }
+    }
+
+    function fetchFallbackPrompt(dev) {
+      const out = document.getElementById('radarOutput');
+      let html = `<strong style="color: var(--brand-accent);">⚡ WorkPulse Radar Scan for ${dev.name} (${dev.role}):</strong><br><br>`;
+      dev.tasks.forEach(t => {
+        html += `<div style="margin-bottom: 8px;">
+          <span class="source-tag ${t.source}">${t.sourceLabel}</span>
+          <strong>${t.id}:</strong> ${t.title}<br>
+          <small style="color: var(--text-muted);">${t.footerRight}</small>
+        </div>`;
+      });
+      out.innerHTML = html;
+    }
+
+    async function fetchDbTickets() {
+      try {
+        const res = await fetch('/api/v1/tickets');
+        const tickets = await res.json();
+        if (Array.isArray(tickets) && tickets.length > 0) {
+          const alexTasks = tickets.filter(t => t.assigned_to === 'alex').map(t => ({
+            id: t.id, source: t.source, sourceLabel: t.source_label, priority: t.priority, priorityLabel: t.priority_label, title: t.title, desc: t.description, footerLeft: `Assigned: ${t.assigned_name}`, footerRight: t.sla_remaining
+          }));
+          if (alexTasks.length > 0) developerData.alex.tasks = alexTasks;
+          renderDevTasks();
+        }
+      } catch(e) {}
+    }
+
+    function initWebSocket() {
+      try {
+        const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+        const socket = new WebSocket(`${wsProtocol}//${window.location.host}/ws`);
+        socket.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.type === "NEW_TICKET" && data.ticket) {
+              const t = data.ticket;
+              if (developerData[t.assigned_to]) {
+                developerData[t.assigned_to].tasks.unshift({
+                  id: t.id, source: t.source, sourceLabel: t.source_label, priority: t.priority, priorityLabel: t.priority_label, title: t.title, desc: t.description, footerLeft: `Assigned: ${t.assigned_name}`, footerRight: t.sla_remaining
+                });
+                renderDevTasks();
+              }
+              const tbody = document.querySelector('#allTicketsTable tbody');
+              if (tbody) {
+                const tr = document.createElement('tr');
+                tr.className = 'ticket-row';
+                tr.style.backgroundColor = 'rgba(0, 163, 224, 0.1)';
+                tr.innerHTML = `
+                  <td><span class="source-tag ${t.source}">${t.source_label}</span> <strong>${t.id}</strong></td>
+                  <td>${t.title}</td>
+                  <td><span class="badge ${t.priority}">${t.priority_label}</span></td>
+                  <td><strong>${t.assigned_name}</strong></td>
+                  <td><span style="color: #ea580c;">${t.state}</span></td>
+                  <td><strong style="color: var(--p1-red);">${t.sla_remaining}</strong></td>
+                `;
+                tbody.insertBefore(tr, tbody.firstChild);
+              }
+            }
+          } catch(e) {}
+        };
+      } catch(e) {}
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderDevTasks();
+      fetchDbTickets();
+      initWebSocket();
+    });
+  </script>
+
+</body>
+</html>

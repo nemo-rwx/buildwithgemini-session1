@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WorkPulse | Cognizant Intelligent Workspace</title>
+<!-- Google Fonts & Material Symbols -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+<style>
+  :root {
+    --brand-dark: #000055;
+    --brand-blue: #0033a0;
+    --brand-accent: #00a3e0;
+    --brand-teal: #00b8e6;
+    --bg: #f0f4f8;
+    --border: #dbe2ea;
+    --card-bg: #ffffff;
+    --text-dark: #0f172a;
+    --text-muted: #64748b;
+    --bubble-agent: #ffffff;
+    --input-bg: #f8fafc;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    color: var(--text-dark);
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  /* Header Layout */
+  header {
+    background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-blue) 100%);
+    color: #fff;
+    padding: 0.85rem 1.8rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border-bottom: 2px solid var(--brand-accent);
+  }
+  .brand-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .cognizant-logo {
+    display: flex;
+    align-items: center;
+  }
+  .divider-dot {
+    width: 4px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+  }
+  .app-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .app-name span.highlight {
+    color: var(--brand-accent);
+  }
+  header .badge {
+    background: rgba(0, 163, 224, 0.2);
+    border: 1px solid rgba(0, 163, 224, 0.4);
+    color: #e0f2fe;
+    font-size: 0.78rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  header .badge::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: #10b981;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #10b981;
+  }
+
+  /* Header Buttons */
+  .hdr-btn {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.82rem;
+    background: rgba(255,255,255,0.18);
+    border-radius: 14px;
+    font-weight: 600;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    text-decoration: none;
+  }
+  .hdr-btn:hover { background: rgba(255,255,255,0.3); }
+
+  /* Dialogue Log Stream */
+  #log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.8rem 1.5rem;
+    max-width: 880px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  /* Dialogue Row Component */
+  .msg {
+    display: flex;
+    gap: 0.9rem;
+    max-width: 88%;
+    position: relative;
+    animation: fadeIn 0.25s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+  }
+
+  .msg.agent {
+    align-self: flex-start;
+  }
+
+  /* Dialogue Avatar */
+  .dialogue-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .msg.user .dialogue-avatar {
+    background: linear-gradient(135deg, var(--brand-blue), var(--brand-dark));
+    color: #ffffff;
+    border: 2px solid #ffffff;
+  }
+
+  .msg.agent .dialogue-avatar {
+    background: linear-gradient(135deg, var(--brand-accent), var(--brand-teal));
+    color: #ffffff;
+    border: 2px solid #ffffff;
+  }
+
+  /* Dialogue Content Container */
+  .dialogue-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .dialogue-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .msg.user .dialogue-meta {
+    justify-content: flex-end;
+  }
+
+  /* Dialogue Speech Bubbles */
+  .bubble {
+    padding: 0.9rem 1.25rem;
+    border-radius: 16px;
+    background: var(--bubble-agent);
+    border: 1px solid var(--border);
+    text-align: left;
+    white-space: pre-wrap;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    line-height: 1.55;
+    font-size: 0.95rem;
+    position: relative;
+    color: var(--text-dark);
+  }
+
+  .msg.user .bubble {
+    background: linear-gradient(135deg, var(--brand-blue) 0%, #001f66 100%);
+    color: #ffffff;
+    border: none;
+    border-top-right-radius: 4px;
+    box-shadow: 0 4px 14px rgba(0, 51, 160, 0.25);
+  }
+
+  .msg.agent .bubble {
+    border-left: 4px solid var(--brand-accent);
+    border-top-left-radius: 4px;
+  }
+
+  /* Hover Quick Action Toolbar on Agent Messages */
+  .msg-actions {
+    position: absolute;
+    top: -12px;
+    right: 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2px 6px;
+    display: none;
+    gap: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .msg.agent:hover .msg-actions { display: flex; }
+
+  .action-btn {
+    background: none;
+    border: none;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  .action-btn:hover { background: rgba(0, 163, 224, 0.15); color: var(--brand-accent); }
+
+  /* Typing Pulse Indicator */
+  .typing-pulse {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--brand-accent);
+    border-radius: 50%;
+    animation: pulse 1.2s infinite ease-in-out;
+  }
+
+  .pulse-dot:nth-child(2) { animation-delay: 0.2s; }
+  .pulse-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Tailored Example Prompts Chips */
+  .demo-chips {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.5rem 1.5rem;
+    max-width: 880px;
+    width: 100%;
+    margin: 0 auto;
+    overflow-x: auto;
+    justify-content: center;
+  }
+  .chip {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--brand-accent);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  }
+  .chip:hover {
+    border-color: var(--brand-accent);
+    background: rgba(0, 163, 224, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 163, 224, 0.2);
+  }
+
+  /* Input Form Layout */
+  form {
+    display: flex;
+    gap: 0.6rem;
+    padding: 1.1rem 1.5rem;
+    border-top: 1px solid var(--border);
+    background: var(--card-bg);
+    max-width: 880px;
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.04);
+  }
+  input {
+    flex: 1;
+    padding: 0.85rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background: var(--input-bg);
+    color: var(--text-dark);
+  }
+  input:focus {
+    border-color: var(--brand-accent);
+    box-shadow: 0 0 0 3px rgba(0, 163, 224, 0.18);
+  }
+  .btn-mic {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0 1rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--brand-accent);
+    transition: all 0.2s;
+  }
+  .btn-mic:hover { background: rgba(0, 163, 224, 0.15); }
+  .btn-mic.recording { background: #ef4444; color: #fff; animation: pulse 1s infinite; }
+
+  button.btn-send {
+    padding: 0.85rem 1.5rem;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-dark) 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+  button.btn-send:hover {
+    box-shadow: 0 4px 12px rgba(0, 51, 160, 0.35);
+    transform: translateY(-1px);
+  }
+
+  /* Sliding Channel Drawer */
+  .channel-drawer {
+    position: fixed;
+    top: 0; right: -360px;
+    width: 360px; height: 100vh;
+    background: var(--card-bg);
+    border-left: 2px solid var(--brand-accent);
+    box-shadow: -10px 0 30px rgba(0,0,0,0.3);
+    z-index: 3000;
+    transition: right 0.3s ease-in-out;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .channel-drawer.open { right: 0; }
+
+  /* Cognizant Dialogue Action Modal */
+  .dialogue-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 55, 0.7);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+  }
+  .dialogue-modal.show { display: flex; }
+  .modal-box {
+    background: var(--card-bg);
+    border-radius: 18px;
+    width: 440px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 85, 0.3);
+    border: 2px solid var(--brand-accent);
+    color: var(--text-dark);
+  }
+
+  /* A2UI Components */
+  .a2card {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem;
+    background: var(--card-bg);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    max-width: 100%;
+    border-left: 4px solid var(--brand-accent);
+  }
+  .a2card + .a2card, .a2col > .a2card { margin-top: 0.75rem; }
+  .a2col { display: flex; flex-direction: column; gap: 0.5rem; }
+  .a2row { display: flex; flex-direction: row; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+  .a2row.between { justify-content: space-between; }
+  .a2text { margin: 0; line-height: 1.45; }
+  .a2text.a2-h1 { font-size: 1.4rem; font-weight: 700; color: var(--brand-accent); }
+  .a2text.a2-h2 { font-size: 1.2rem; font-weight: 700; color: var(--brand-blue); }
+  .a2text.a2-h3 { font-size: 1.05rem; font-weight: 600; color: var(--text-dark); }
+  .a2text.a2-h4 { font-size: 0.95rem; font-weight: 600; }
+  .a2text.a2-caption { font-size: 0.85rem; color: var(--text-muted); }
+  .a2divider { border: none; border-top: 1px solid var(--border); margin: 0.5rem 0; width: 100%; }
+  .a2img { max-width: 100%; border-radius: 10px; display: block; border: 1px solid var(--border); }
+  .material-symbols-outlined { font-family: 'Material Symbols Outlined'; font-size: 1.3rem; line-height: 1; vertical-align: middle; color: var(--brand-accent); }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand-group">
+    <!-- Cognizant SVG Brand Mark -->
+    <svg class="cognizant-logo" viewBox="0 0 180 32" height="26" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 10 4 A 12 12 0 1 0 22 16 L 16 16 A 6 6 0 1 1 10 10 Z" fill="#00A3E0"/>
+      <circle cx="16" cy="10" r="2.8" fill="#00FFCC"/>
+      <text x="28" y="21" font-family="'Inter', sans-serif" font-weight="700" font-size="17" fill="#FFFFFF" letter-spacing="-0.4">cognizant</text>
+    </svg>
+    <div class="divider-dot"></div>
+    <div class="app-name">
+      Work<span class="highlight">Pulse</span>
+    </div>
+  </div>
+  <div style="display:flex; align-items:center; gap:0.5rem;">
+    <button class="hdr-btn" onclick="toggleDrawer()">🔐 OAuth Channels</button>
+    <button class="hdr-btn" onclick="openDialogueModal()">⚡ Actions</button>
+    <a href="/dashboard" class="hdr-btn" style="background:var(--brand-blue);">📊 All Tickets</a>
+    <div class="badge">A2A Connected</div>
+  </div>
+</header>
+
+<div id="log"></div>
+
+<!-- Tailored Example Prompts from project_brief.md -->
+<div class="demo-chips">
+  <div class="chip" onclick="sendQuickPrompt('What are my top 3 high-priority pending items due today across Slack and Jira, and who is blocked on me?')">📌 Top 3 Pending Items (Slack & Jira)</div>
+  <div class="chip" onclick="sendQuickPrompt('Identify what are left across Jira, Teams, Slack, and Email and compute urgency score weighting')">⚡ Urgency Score & Pending Radar</div>
+  <div class="chip" onclick="sendQuickPrompt('Generate a visual daily workload heatmap graphic for my pending items')">📊 Daily Workload Heatmap</div>
+</div>
+
+<form id="form">
+  <input id="input" placeholder="Ask WorkPulse anything across Jira, Slack, Teams, or Email..." autocomplete="off" autofocus>
+  <button type="button" class="btn-mic" id="micBtn" onclick="toggleSpeech()" title="Speech to Text Input">🎤</button>
+  <button type="submit" class="btn-send">Send</button>
+</form>
+
+<!-- Sliding Channel OAuth Drawer -->
+<div class="channel-drawer" id="channelDrawer">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <h3 style="font-size:16px; font-weight:700;">🔐 OAuth Channels</h3>
+    <button style="background:none; border:none; color:var(--text-muted); font-size:22px; cursor:pointer;" onclick="toggleDrawer()">&times;</button>
+  </div>
+  <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Enterprise OAuth status across synced channels:</p>
+
+  <div style="display:flex; flex-direction:column; gap:12px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--input-bg); border-radius:8px; border:1px solid var(--border);">
+      <div>
+        <strong>📌 Jira Software</strong>
+        <div style="font-size:11px; color:var(--text-muted);">read:jira-work, write:jira-work</div>
+      </div>
+      <span style="color:#10b981; font-weight:700; font-size:11px;">Active</span>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--input-bg); border-radius:8px; border:1px solid var(--border);">
+      <div>
+        <strong>💬 Slack Mentions</strong>
+        <div style="font-size:11px; color:var(--text-muted);">channels:read, chat:write</div>
+      </div>
+      <span style="color:#10b981; font-weight:700; font-size:11px;">Active</span>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--input-bg); border-radius:8px; border:1px solid var(--border);">
+      <div>
+        <strong>👥 Microsoft Teams</strong>
+        <div style="font-size:11px; color:var(--text-muted);">User.Read, Group.Read.All</div>
+      </div>
+      <span style="color:#10b981; font-weight:700; font-size:11px;">Active</span>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--input-bg); border-radius:8px; border:1px solid var(--border);">
+      <div>
+        <strong>📧 Google Workspace Email</strong>
+        <div style="font-size:11px; color:var(--text-muted);">gmail.readonly</div>
+      </div>
+      <span style="color:#10b981; font-weight:700; font-size:11px;">Active</span>
+    </div>
+  </div>
+</div>
+
+<!-- Cognizant Task Dialogue Action Modal -->
+<div class="dialogue-modal" id="dialogueModal">
+  <div class="modal-box">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+      <h3 style="font-size:16px; font-weight:700;">⚡ Task Dialogue Controls</h3>
+      <button style="background:none; border:none; color:var(--text-muted); font-size:20px; cursor:pointer; padding:0;" onclick="closeDialogueModal()">&times;</button>
+    </div>
+    <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Perform quick dialogue actions on your pending tasks:</p>
+    
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button style="background:var(--input-bg); color:var(--brand-accent); border:1px solid var(--border); padding:10px; border-radius:8px; text-align:left; cursor:pointer; font-weight:600;" onclick="triggerAction('snooze')">⏰ Snooze Task Reminder (2 Hours)</button>
+      <button style="background:var(--input-bg); color:var(--brand-accent); border:1px solid var(--border); padding:10px; border-radius:8px; text-align:left; cursor:pointer; font-weight:600;" onclick="triggerAction('reassign')">📌 Reassign Ticket to Team Member</button>
+      <button style="background:var(--input-bg); color:var(--brand-accent); border:1px solid var(--border); padding:10px; border-radius:8px; text-align:left; cursor:pointer; font-weight:600;" onclick="triggerAction('priority')">🔥 Bump Priority to P1 Critical</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const log = document.getElementById("log");
+const form = document.getElementById("form");
+const input = document.getElementById("input");
+
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+function bubble(who) {
+  const m = el("div", "msg " + who);
+  
+  // Dialogue Avatar
+  const av = el("div", "dialogue-avatar", who === "user" ? "EL" : "🤖");
+  
+  // Content Container
+  const content = el("div", "dialogue-content");
+  
+  // Meta Timestamp Header
+  const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const meta = el("div", "dialogue-meta", who === "user" ? `You (Engineering Lead) • ${timeStr}` : `WorkPulse Intelligence • ${timeStr}`);
+  
+  // Speech Bubble
+  const b = el("div", "bubble");
+
+  // Hover Action Bar for Agent Messages
+  if (who === "agent") {
+    const actions = el("div", "msg-actions");
+    
+    const copyBtn = el("button", "action-btn", "📋 Copy");
+    copyBtn.onclick = () => { navigator.clipboard.writeText(b.innerText); alert("Text copied to clipboard!"); };
+    
+    const snoozeBtn = el("button", "action-btn", "⏰ Snooze 2h");
+    snoozeBtn.onclick = () => alert("Snoozed task reminder for 2 hours.");
+
+    const pinBtn = el("button", "action-btn", "📌 Pin");
+    pinBtn.onclick = () => alert("Task pinned to your workstation!");
+
+    actions.appendChild(copyBtn);
+    actions.appendChild(snoozeBtn);
+    actions.appendChild(pinBtn);
+    m.appendChild(actions);
+  }
+  
+  content.appendChild(meta);
+  content.appendChild(b);
+  
+  m.appendChild(av);
+  m.appendChild(content);
+  
+  log.appendChild(m);
+  log.scrollTop = log.scrollHeight;
+  return b;
+}
+
+function showTypingIndicator() {
+  const m = el("div", "msg agent");
+  const av = el("div", "dialogue-avatar", "🤖");
+  const content = el("div", "dialogue-content");
+  const b = el("div", "bubble");
+  b.innerHTML = '<div class="typing-pulse"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div></div>';
+  content.appendChild(b);
+  m.appendChild(av);
+  m.appendChild(content);
+  m.id = "typingMsg";
+  log.appendChild(m);
+  log.scrollTop = log.scrollHeight;
+}
+
+function removeTypingIndicator() {
+  const t = document.getElementById("typingMsg");
+  if (t) t.remove();
+}
+
+function toggleDrawer() { document.getElementById("channelDrawer").classList.toggle("open"); }
+function openDialogueModal() { document.getElementById("dialogueModal").classList.add("show"); }
+function closeDialogueModal() { document.getElementById("dialogueModal").classList.remove("show"); }
+function triggerAction(act) {
+  alert(`⚡ Action '${act}' executed via WorkPulse Dialogue System!`);
+  closeDialogueModal();
+}
+
+/* Speech Recognition */
+let isRecording = false;
+let recognition = null;
+
+function toggleSpeech() {
+  const micBtn = document.getElementById("micBtn");
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRec) {
+    alert("Speech recognition is supported natively in Chrome/Edge browsers. You can type directly in the input box!");
+    return;
+  }
+
+  if (!recognition) {
+    recognition = new SpeechRec();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onresult = (e) => {
+      input.value = e.results[0][0].transcript;
+      micBtn.classList.remove("recording");
+      isRecording = false;
+    };
+    recognition.onerror = () => { micBtn.classList.remove("recording"); isRecording = false; };
+  }
+
+  if (isRecording) {
+    recognition.stop();
+    micBtn.classList.remove("recording");
+    isRecording = false;
+  } else {
+    recognition.start();
+    micBtn.classList.add("recording");
+    isRecording = true;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+ * A2UI mini-renderer (v0.8 Basic Catalog subset).
+ * -------------------------------------------------------------------------- */
+
+function boundStr(v) {
+  if (v == null) return "";
+  if (typeof v === "string") return v;
+  if (typeof v.literalString === "string") return v.literalString;
+  return "";
+}
+
+function childIds(props) {
+  const ids = [];
+  if (props && typeof props.child === "string") ids.push(props.child);
+  const ch = props && props.children;
+  if (ch && Array.isArray(ch.explicitList)) for (const c of ch.explicitList) if (typeof c === "string") ids.push(c);
+  return ids;
+}
+
+function iconName(n) { return String(n || "").replace(/([a-z0-9])([A-Z])/g, "$1_$2").replace(/\s+/g, "_").toLowerCase(); }
+
+function buildNode(id, comps, seen) {
+  if (!id || seen.has(id)) return null;
+  seen.add(id);
+  const spec = comps[id];
+  if (!spec || typeof spec !== "object") return null;
+  const type = Object.keys(spec)[0];
+  const props = spec[type] || {};
+  const kids = () => childIds(props).map(cid => buildNode(cid, comps, seen)).filter(Boolean);
+
+  switch (type) {
+    case "Card": {
+      const d = el("div", "a2card"); kids().forEach(n => d.appendChild(n)); return d;
+    }
+    case "Column":
+    case "List": {
+      const horizontal = type === "List" && props.direction === "horizontal";
+      const d = el("div", horizontal ? "a2row" : "a2col"); kids().forEach(n => d.appendChild(n)); return d;
+    }
+    case "Row": {
+      const d = el("div", "a2row" + (props.distribution === "spaceBetween" ? " between" : ""));
+      kids().forEach(n => d.appendChild(n)); return d;
+    }
+    case "Text": {
+      const t = el("div", "a2text");
+      const hint = String(props.usageHint || "body").toLowerCase();
+      if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(hint)) t.classList.add("a2-" + hint);
+      else if (hint === "caption") t.classList.add("a2-caption");
+      t.textContent = boundStr(props.text);
+      return t;
+    }
+    case "Divider":
+      return el("hr", "a2divider");
+    case "Image": {
+      const src = boundStr(props.url || props.src);
+      if (!/^https?:\/\//i.test(src)) return null;
+      const img = el("img", "a2img"); img.src = src; img.alt = boundStr(props.alt) || ""; return img;
+    }
+    case "Icon": {
+      const s = el("span", "material-symbols-outlined"); s.textContent = iconName(boundStr(props.name) || props.name); return s;
+    }
+    default:
+      return null;
+  }
+}
+
+function renderSurface(messages, container) {
+  const comps = {};
+  const roots = [];
+  for (const m of messages) {
+    if (m.beginRendering && typeof m.beginRendering.root === "string") roots.push(m.beginRendering.root);
+    const su = m.surfaceUpdate;
+    if (su && Array.isArray(su.components)) for (const c of su.components) if (c && c.id && c.component) comps[c.id] = c.component;
+  }
+  let rootIds = roots.filter(r => comps[r]);
+  if (rootIds.length === 0) {
+    const referenced = new Set();
+    for (const id in comps) { const spec = comps[id]; childIds(spec[Object.keys(spec)[0]] || {}).forEach(c => referenced.add(c)); }
+    rootIds = Object.keys(comps).filter(id => !referenced.has(id));
+  }
+  let drew = false;
+  for (const rid of rootIds) { const node = buildNode(rid, comps, new Set()); if (node) { container.appendChild(node); drew = true; } }
+  return drew;
+}
+
+function flattenText(messages) {
+  const out = [];
+  for (const m of messages) {
+    const su = m.surfaceUpdate;
+    if (su && Array.isArray(su.components)) for (const c of su.components) if (c && c.component && c.component.Text) out.push(boundStr(c.component.Text.text));
+  }
+  return out.join("\n").trim();
+}
+
+function renderReply(b, parts) {
+  b.textContent = "";
+  const texts = parts.filter(p => p && (p.kind === "text" || (!p.kind && p.text))).map(p => p.text || "");
+  const a2ui = parts.filter(p => p && p.kind === "a2ui" && p.data).map(p => p.data);
+
+  const textStr = texts.join("\n").trim();
+  if (textStr) b.appendChild(el("div", null, textStr));
+
+  if (a2ui.length) {
+    b.classList.add("rich");
+    if (!renderSurface(a2ui, b)) b.appendChild(el("div", null, flattenText(a2ui) || "(no card content)"));
+  }
+  if (!b.childNodes.length) b.textContent = "(no response)";
+  log.scrollTop = log.scrollHeight;
+}
+
+function sendQuickPrompt(promptText) {
+  input.value = promptText;
+  form.dispatchEvent(new Event("submit", { cancelable: true }));
+}
+
+// Pre-populate Demo Stream on load & connect WebSocket
+window.addEventListener("DOMContentLoaded", () => {
+  // Real-Time WebSocket Connection
+  try {
+    const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const socket = new WebSocket(`${wsProtocol}//${window.location.host}/ws`);
+    socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "NEW_TICKET" && data.ticket) {
+          const b = bubble("agent");
+          b.innerHTML = `⚡ <strong>[REAL-TIME WEBSOCKET PUSH]</strong> New incoming event via <strong>${data.ticket.source_label}</strong>:<br><br>
+          <strong>${data.ticket.id}: ${data.ticket.title}</strong><br>
+          Priority: <span style="color:var(--brand-accent); font-weight:700;">${data.ticket.priority_label}</span> | Assigned: <strong>${data.ticket.assigned_name}</strong><br>
+          <em>${data.ticket.description}</em>`;
+        }
+      } catch(e) {}
+    };
+  } catch(e) {}
+
+  bubble("user").textContent = "Identify what are the left across Email, Slack, Teams, and Jira, and show assigned developer workload.";
+
+  const b = bubble("agent");
+  const demoParts = [
+    { kind: "text", text: "⚡ Here is the live WorkPulse workload radar scan across your enterprise OAuth channels:" },
+    { kind: "a2ui", data: { beginRendering: { surfaceId: "demo_1", root: "card_overview" } } },
+    {
+      kind: "a2ui",
+      data: {
+        surfaceUpdate: {
+          surfaceId: "demo_1",
+          components: [
+            { id: "card_overview", component: { Card: { child: "col_overview" } } },
+            { id: "col_overview", component: { Column: { children: { explicitList: ["hdr_summary", "div_1", "txt_alex", "txt_chris", "txt_elena"] } } } },
+            { id: "hdr_summary", component: { Text: { text: { literalString: "📊 Workload Status: 75% Left (3 Pending Action Items)" }, usageHint: "h3" } } },
+            { id: "div_1", component: { Divider: {} } },
+            { id: "txt_alex", component: { Text: { text: { literalString: "👨‍💻 Alex Rivera (Senior Gateway Eng) • [Jira] PROJ-102: Fix auth timeout bug in gateway (Pending 4h)" }, usageHint: "body" } } },
+            { id: "txt_chris", component: { Text: { text: { literalString: "👨‍💻 Chris Vance (Frontend Lead) • [Slack] PR-42: Review deployment pull request (Pending Review)" }, usageHint: "body" } } },
+            { id: "txt_elena", component: { Text: { text: { literalString: "🔐 Elena Rostova (Lead Security Eng) • [Teams] COMP-99: Q3 Security Compliance Signoff & [Email] EXP-77" }, usageHint: "body" } } }
+          ]
+        }
+      }
+    }
+  ];
+  renderReply(b, demoParts);
+});
+
+form.addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
+  bubble("user").textContent = text;
+  input.value = "";
+  
+  showTypingIndicator();
+  
+  try {
+    const res = await fetch("/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: text }) });
+    const raw = await res.text();
+    removeTypingIndicator();
+    
+    const b = bubble("agent");
+    let data;
+    try { data = JSON.parse(raw); }
+    catch { throw new Error(`Server returned non-JSON (HTTP ${res.status}). ${raw.slice(0, 300)}`); }
+    renderReply(b, data.parts || []);
+  } catch (e) {
+    removeTypingIndicator();
+    const b = bubble("agent");
+    b.textContent = "Error: " + e.message;
+  }
+});
+</script>
+</body>
+</html>
