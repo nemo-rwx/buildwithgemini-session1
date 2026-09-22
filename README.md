@@ -2,7 +2,6 @@
 
 > **WorkPulse** is a conversational workspace assistant that helps enterprise teams track, aggregate, and resolve pending action items across Jira, Microsoft Teams, Slack, and Email with real-time priority scoring, SLA countdowns, and automated task extraction.
 
-![WorkPulse Demo](demo.gif)
 
 ---
 
